@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UMC-practice</string>
+    <string name="app_name">FLO</string>
     <string name="title_activity_song">SongActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
