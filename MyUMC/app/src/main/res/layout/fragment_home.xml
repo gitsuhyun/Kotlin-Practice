@@ -324,16 +324,17 @@
                     </LinearLayout>
                 </HorizontalScrollView>
 
-                <ImageView
-                    android:id="@+id/home_banner_vp"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/img_home_viewpager_exp"
-                    android:layout_marginTop="15dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/home_today_music_oversea_hs"/>
+<!--이미지뷰 하드코딩 방식-->
+<!--                <ImageView-->
+<!--                    android:id="@+id/home_banner_vp"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:adjustViewBounds="true"-->
+<!--                    android:src="@drawable/img_home_viewpager_exp"-->
+<!--                    android:layout_marginTop="15dp"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/home_today_music_oversea_hs"/>-->
 
 <!--
         <androidx.recyclerview.widget.RecyclerView
@@ -347,7 +348,6 @@
             app:layout_constraintTop_toBottomOf="@id/home_today_music_total_tv"/>
 -->
 
-<!--
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/home_banner_vp"
             android:layout_width="match_parent"
@@ -355,8 +355,7 @@
             android:layout_marginTop="15dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/home_today_music_album_rv"/>
--->
+            app:layout_constraintTop_toBottomOf="@id/home_today_music_oversea_hs"/>
 
         <TextView
             android:id="@+id/home_daily_music_title_tv"

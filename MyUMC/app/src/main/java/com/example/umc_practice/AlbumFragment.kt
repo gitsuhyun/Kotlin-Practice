@@ -5,12 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.umc_practice.databinding.FragmentAlbumBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 class AlbumFragment : Fragment() {
 
     lateinit var binding: FragmentAlbumBinding
+
+    private val information = arrayListOf("수록곡", "상세정보", "영상")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,9 +27,14 @@ class AlbumFragment : Fragment() {
                 .commitAllowingStateLoss()
         }
 
-        binding.songLalacLayout.setOnClickListener {
-            Toast.makeText(activity, "LILAC", Toast.LENGTH_SHORT).show()
-        }
+        val albumAdapter = AlbumVPAdapter(this)
+        binding.albumContentVp.adapter = albumAdapter
+
+        //tab 레이아웃과 viewPager 연결
+        TabLayoutMediator(binding.albumContentTb, binding.albumContentVp) {
+            tab, position ->
+            tab.text = information[position]
+        }.attach()
 
         return  binding.root
     }
