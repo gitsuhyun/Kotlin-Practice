@@ -14,6 +14,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
+    <SeekBar
+        android:id="@+id/main_progressbar_view"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@null"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        android:progress="0"
+        android:progressTint="#3F3FFF"
+        android:progressBackgroundTint="@color/gray_color"
+        android:thumb="@color/transparent"
+        android:max="100000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/main_player_cl"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_player_cl"
         android:layout_width="match_parent"
