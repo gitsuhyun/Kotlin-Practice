@@ -1,5 +1,6 @@
 package com.example.umc_practice
 
+import LockerFragment
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,6 +20,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        inputDummySongs()
+        initBottomNavigation()
+
+
         val song = Song(
             binding.mainMiniplayerTitleTv.text.toString(),
             binding.mainMiniplayerSingerTv.text.toString(),
@@ -37,8 +42,6 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, SongActivity::class.java)
             startActivity(intent)
         }
-        inputDummySongs()
-        initBottomNavigation()
 
 
         Log.d("Song", song.title + song.singer)
