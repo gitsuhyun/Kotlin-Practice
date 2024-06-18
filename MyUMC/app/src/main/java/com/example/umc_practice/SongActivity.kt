@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.example.umc_practice.databinding.ActivityMainBinding
 import com.example.umc_practice.databinding.ActivitySongBinding
 import com.google.gson.Gson
@@ -12,10 +13,14 @@ import com.google.gson.Gson
 class SongActivity : AppCompatActivity() {
 
     lateinit var binding: ActivitySongBinding
-    lateinit var song: Song
+    //lateinit var song: Song
     lateinit var timer: Timer
     private var mediaPlayer : MediaPlayer? = null
     private var gson : Gson = Gson()
+
+    val songs = arrayListOf<Song>()
+    lateinit var songDB: SongDatabase
+    var nowPos =0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,10 +28,13 @@ class SongActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //데이터 받아와주기
+        initPlayList()
         initSong()
+        initClickListener()
 
-        setPlayer(song)
+    }
 
+    private fun initClickListener() {
         //root는 activity_song의 최상단 뷰, 모든 뷰를 맘껏 쓸 수 있음
         binding.songDownIb.setOnClickListener {
             finish()
@@ -38,29 +46,66 @@ class SongActivity : AppCompatActivity() {
             setPlayerStatus(true)
         }
 
+        binding.songNextIv.setOnClickListener {
+            moveSong(+1)
+        }
+
+        binding.songPreviousIv.setOnClickListener {
+            moveSong(-1)
+        }
     }
 
-    private fun initSong() {
-        if (intent.hasExtra("title") && intent.hasExtra("singer")) {
-            song = Song(
-                intent.getStringExtra("title")!!,
-                intent.getStringExtra("singer")!!,
-                intent.getIntExtra("second", 0)!!,
-                intent.getIntExtra("playTime", 0)!!,
-                intent.getBooleanExtra("isPlaying", false)!!,
-                intent.getStringExtra("music")!!
-            )
+    private fun moveSong(direct : Int){
+        if (nowPos + direct < 0){
+            Toast.makeText(this, "first song", Toast.LENGTH_SHORT).show()
+            return
         }
+        else if (nowPos + direct >= songs.size){
+            Toast.makeText(this, "last song", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+            nowPos += direct
+
+
+            timer.interrupt()
+            startTimer()
+
+            mediaPlayer?.release()
+            mediaPlayer = null
+
+            setPlayer(songs[nowPos])
+    }
+
+
+    private fun initSong() {
+        val spf = getSharedPreferences("song", MODE_PRIVATE)
+        val songId = spf.getInt("songId", 0)
+
+        nowPos = getPlayingSongPosition(songId)
+
+        Log.d("now Song ID", songs[nowPos].id.toString())
         startTimer()
+        setPlayer(songs[nowPos])
+    }
+
+    private fun getPlayingSongPosition(songId : Int): Int{
+        for (i in 0 until songs.size){
+            if (songs[i].id == songId){
+                return i
+            }
+        }
+        return 0
     }
 
     private fun setPlayer(song: Song) {
-        binding.songMusicTitleTv.text = intent.getStringExtra("title")
-        binding.songSingerNameTv.text = intent.getStringExtra("singer")
+        binding.songMusicTitleTv.text = song.title
+        binding.songSingerNameTv.text = song.singer
         binding.songStartTimeTv.text =
             String.format("%02d:%02d", song.second / 60, song.second % 60)
         binding.songEndTimeTv.text =
             String.format("%02d:%02d", song.playTime / 60, song.playTime % 60)
+        binding.songAlbumIv.setImageResource(song.coverImg!!)
         binding.songProgressbarView.progress = (song.second * 1000 / song.playTime)
         val music = resources.getIdentifier(song.music, "raw", this.packageName) //리소스 파일로부터 가져오는 작업
         mediaPlayer = MediaPlayer.create(this, music)
@@ -69,7 +114,7 @@ class SongActivity : AppCompatActivity() {
     }
 
     fun setPlayerStatus(isPlaying: Boolean) {
-        song.isPlaying = isPlaying
+        songs[nowPos].isPlaying = isPlaying
         timer.isPlaying = isPlaying
 
         if (isPlaying) {
@@ -88,7 +133,7 @@ class SongActivity : AppCompatActivity() {
     }
 
     private fun startTimer() {
-        timer = Timer(song.playTime, song.isPlaying)
+        timer = Timer(songs[nowPos].playTime, songs[nowPos].isPlaying)
         timer.start()
     }
 
@@ -131,12 +176,17 @@ class SongActivity : AppCompatActivity() {
         }
     }
 
+    private fun initPlayList(){
+        songDB = SongDatabase.getInstance(this)!!
+        songs.addAll(songDB.SongDao().getSongs())
+    }
+
     //사용자가 포커스를 잃었을 때 음악이 중지
     override fun onPause() {
         super.onPause()
         setPlayerStatus(false)
         //진행 상태 반영
-        song.second = ((binding.songProgressbarView.progress * song.playTime)/100)/1000
+        songs[nowPos].second = ((binding.songProgressbarView.progress * songs[nowPos].playTime)/100)/1000
 
         //sharedPreference 사용해서 내부 데이터에 저장
         val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE) //mode_private -> private하게 저장하는 모드
@@ -145,8 +195,7 @@ class SongActivity : AppCompatActivity() {
 //        editor.putString("title", song.title)
 //        editor.putString("singer", song.singer)
     // 하나하나 넣기 번거로우니 json으로 변환해서 포맷
-        val songJson = gson.toJson(song)
-        editor.putString("songData", songJson)
+        editor.putInt("songId", songs[nowPos].id)
         editor.apply() //git 에서 push 같은 역할! 꼭 해줘야 적용됨
     }
 
