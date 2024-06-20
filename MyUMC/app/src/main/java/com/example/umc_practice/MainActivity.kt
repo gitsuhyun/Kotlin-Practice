@@ -41,7 +41,8 @@ class MainActivity : AppCompatActivity() {
         editor.apply()
 
         val intent = Intent(this, SongActivity::class.java)
-            startActivity(intent)
+
+        startActivity(intent)
         }
 
 
