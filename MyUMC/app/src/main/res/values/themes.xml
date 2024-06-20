@@ -30,4 +30,6 @@
             @color/transparent
         </item>
     </style>
+
+    <style name="Theme.UMCpractice" parent="Base.Theme.UMCpractice" />
 </resources>

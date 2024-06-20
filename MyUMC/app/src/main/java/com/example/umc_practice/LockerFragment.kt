@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.umc_practice.LockerVPAdapter
+import com.example.umc_practice.LoginActivity
 import com.example.umc_practice.databinding.FragmentLockerBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -26,6 +27,10 @@ class LockerFragment : Fragment() {
         TabLayoutMediator(binding.lockerContentTb, binding.lockerContentVp) { tab, position ->
             tab.text = information[position]
         }.attach()
+
+        binding.lockerLoginTv.setOnClickListener {
+            startActivity(Intent(activity, LoginActivity::class.java))
+        }
 
         return binding.root
     }
