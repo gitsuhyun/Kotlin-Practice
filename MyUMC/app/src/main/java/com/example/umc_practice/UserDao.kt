@@ -14,5 +14,5 @@ interface UserDao {
     fun getUsers() : List<User>
 
     @Query("SELECT * FROM UserTable WHERE email = :email AND password = :password")
-    fun getUsers(email: String, password:String) : User?
+    fun getUser(email: String, password:String) : User?
 }
