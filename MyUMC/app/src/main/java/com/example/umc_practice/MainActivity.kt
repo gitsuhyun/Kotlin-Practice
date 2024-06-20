@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         inputDummySongs()
+        inputDummyAlbums()
         initBottomNavigation()
 
 
@@ -201,4 +202,70 @@ class MainActivity : AppCompatActivity() {
         Log.d("DB data", _songs.toString())
 
     }
+
+    private fun inputDummyAlbums(){
+        val songDB = SongDatabase.getInstance(this)!!
+        val albums = songDB.AlbumDao().getAlbums()
+
+        if (albums.isNotEmpty()) return
+
+        songDB.AlbumDao().insert(
+            Album(
+                0,
+                "IU 5th Album 'LILAC'",
+                "아이유(IU)",
+                R.drawable.img_album_exp2
+            )
+        )
+
+        songDB.AlbumDao().insert(
+            Album(
+                1,
+                "FLU",
+                "아이유(IU)",
+                R.drawable.img_album_exp2
+            )
+        )
+
+        songDB.AlbumDao().insert(
+            Album(
+                2,
+                "Butter",
+                "BTS",
+                R.drawable.img_album_exp
+            )
+        )
+
+        songDB.AlbumDao().insert(
+            Album(
+                3,
+                "Next Level",
+                "AESPA",
+                R.drawable.img_album_exp3
+            )
+        )
+
+        songDB.AlbumDao().insert(
+            Album(
+                4,
+                "Boy with Luv",
+                "music_boy",
+                R.drawable.img_album_exp4
+            )
+        )
+
+        songDB.AlbumDao().insert(
+            Album(
+                5,
+                "BBoom BBoom",
+                "MOMOLAND",
+                R.drawable.img_album_exp5
+            )
+        )
+
+        val _songs = songDB.SongDao().getSongs()
+        Log.d("DB data", _songs.toString())
+
+    }
+
 }
