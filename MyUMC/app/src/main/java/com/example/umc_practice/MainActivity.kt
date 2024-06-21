@@ -204,7 +204,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun inputDummyAlbums(){
+    private fun inputDummyAlbums() {
         val songDB = SongDatabase.getInstance(this)!!
         val albums = songDB.AlbumDao().getAlbums()
 
