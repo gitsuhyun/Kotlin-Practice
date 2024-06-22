@@ -46,13 +46,20 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        Log.d("Song", song.title + song.singer)
+        //Log.d("Song", song.title + song.singer)
+        Log.d("MAIN/JWT_TO_SERVER", getJwt().toString())
     }
 
     private fun setMiniPlayer(song : Song) {
         binding.mainMiniplayerTitleTv.text = song.title
         binding.mainMiniplayerSingerTv.text = song.singer
         binding.mainProgressbarView.progress = (song.second*100000)/song.playTime
+    }
+
+    private fun getJwt(): String? {
+        val spf = this.getSharedPreferences("auth", AppCompatActivity.MODE_PRIVATE)
+
+        return spf!!.getString("jwt", "")
     }
     override fun onStart() {
         super.onStart()

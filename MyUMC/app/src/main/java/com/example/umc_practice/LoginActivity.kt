@@ -8,7 +8,7 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.umc_practice.databinding.ActivityLoginBinding
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), LoginView {
 
     private lateinit var binding: ActivityLoginBinding
 
@@ -41,27 +41,54 @@ class LoginActivity : AppCompatActivity() {
         val email: String = binding.loginIdEt.text.toString() + "@" + binding.loginDirectInputEt.text.toString()
         val pwd : String = binding.loginPasswordEt.text.toString()
 
-        val songDB = SongDatabase.getInstance(this)!!
-        val user = songDB.UserDao().getUser(email, pwd)
+//        val songDB = SongDatabase.getInstance(this)!!
+//        val user = songDB.UserDao().getUser(email, pwd)
+//
+//        user?.let {
+//            Log.d("LOGIN_ACT/GET_USER", "userId : ${user.id}, $user")
+//            //saveJwt(user.id)
+//            startMainActivity()
+//        }
+        val authService = AuthService()
+        authService.setLoginView(this)
 
-        user?.let {
-            Log.d("LOGIN_ACT/GET_USER", "userId : ${user.id}, $user")
-            saveJwt(user.id)
-            startMainActivity()
-        }
+        authService.login(User(email, pwd, ""))
+
         Toast.makeText(this, "회원 정보가 존재하지 않습니다", Toast.LENGTH_SHORT).show()
     }
 
-    private fun saveJwt(jwt: Int){
-        val spf = getSharedPreferences("auth", MODE_PRIVATE)
+//    private fun saveJwt(jwt: Int){
+//        val spf = getSharedPreferences("auth", MODE_PRIVATE)
+//        val editor = spf.edit()
+//
+//        editor.putInt("jwt", jwt)
+//        editor.apply()
+//    }
+
+    private fun saveJwt2(jwt: String){
+        val spf = getSharedPreferences("auth2", MODE_PRIVATE)
         val editor = spf.edit()
 
-        editor.putInt("jwt", jwt)
+        editor.putString("jwt", jwt)
         editor.apply()
     }
 
     private fun startMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun onLoginSuccess(code: Int, result: Result) {
+        when(code) {
+            1000 -> {
+                saveJwt2(result.jwt)
+                startMainActivity()
+            }
+
+        }
+    }
+
+    override fun onLoginFailure() {
+        //실패처리
     }
 }
